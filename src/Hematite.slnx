@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Hematite.Test\Hematite.Test.csproj" Type="Classic C#" />
+  <Project Path="Hematite/Hematite.csproj" />
+</Solution>
