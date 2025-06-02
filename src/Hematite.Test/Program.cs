@@ -56,9 +56,6 @@ unsafe
     Hem.PrintGlInformation();
 
     Effect effect = Effect.Simple.Value;
-    uint cameraUbo = gl.CreateBuffer();
-    gl.NamedBufferStorage(cameraUbo, (nuint)(2 * sizeof(Matrix4x4)), null, BufferStorageMask.DynamicStorageBit);
-    gl.BindBufferBase(BufferTargetARB.UniformBuffer, 0, cameraUbo);
 
     int width, height;
     SDL_GetWindowSizeInPixels(window, &width, &height);
@@ -85,14 +82,10 @@ unsafe
         gl.ClearColor(0.2f, 0.4f, 0.6f, 1.0f);
         gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-        gl.NamedBufferSubData(cameraUbo, 0, [
-            Matrix4x4.Identity,
-            Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, 0, 1000)
-        ]);
-        effect.SetValue(
-            effect.GetLocation("World"),
+        effect.SetValue(effect.GetLocation("Transform"),
             Matrix4x4.CreateRotationZ(SDL_GetTicks() * 0.001f) *
-            Matrix4x4.CreateTranslation(width * 0.5f, height * 0.5f, 0)
+            Matrix4x4.CreateTranslation(width * 0.5f, height * 0.5f, 0) *
+            Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, 0, 1000)
         );
 
         ImmediateRenderer.Instance.Value.RenderTri(
@@ -105,7 +98,6 @@ unsafe
         SDL_GL_SwapWindow(window);
     }
 
-    gl.DeleteBuffer(cameraUbo);
     Hem.DisposeAll();
     SDL_GL_DestroyContext(glContext);
     SDL_DestroyWindow(window);

@@ -15,15 +15,10 @@ public sealed partial class Effect
             vec4 Color;
         } f;
         
-        layout (std140, binding = 0) uniform Camera {
-            mat4 View;
-            mat4 Projection;
-        };
-        
-        uniform mat4 World;
+        uniform mat4 Transform;
         
         void main() {
-            gl_Position = Projection * View * World * vec4(vPosition, 1.0);
+            gl_Position = Transform * vec4(vPosition, 1.0);
             f.TexCoord = vTexCoord;
             f.Color = vColor;
         }
