@@ -1,10 +1,10 @@
 # hematite
-### crappy framework to get started with the game faster
+### a crappy framework to get started with the game faster
 lightweight and crappy framework based on OpenGL 4.5, made to start developing the game faster
 and not waste time on reimplementing the wheel over and over.
 
 this framework is *early in development* and i just wanted to separate boilerplate rendering code 
-from my game as soon as possible. so use it at your own risk, don't expect to have full fledged
+from my game as soon as possible. so use it for your own risk, don't expect to have a full fledged and
 professional framework with rich class library.
 
 to include the framework you need to add it as git submodule, or just clone it into your solution
