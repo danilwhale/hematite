@@ -1,13 +1,17 @@
 using System.Collections.Frozen;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Silk.NET.OpenGL;
 
 namespace Hematite.Resources;
 
 public sealed unsafe partial class Effect : IDisposable
 {
+    private static ReadOnlySpan<GLEnum> ProgramResourceProps => [GLEnum.NameLength, GLEnum.Location];
+
     public readonly GL Gl;
     public readonly uint Program;
+    private readonly FrozenDictionary<string, int> _uniforms;
 
     public Effect(GL gl, string vertexSource, string fragmentSource)
     {
@@ -40,6 +44,50 @@ public sealed unsafe partial class Effect : IDisposable
 
         gl.DeleteShader(vertex);
         gl.DeleteShader(fragment);
+
+        // get amount of active uniforms
+        int activeUniforms;
+        gl.GetProgramInterface(
+            Program,
+            ProgramInterface.Uniform,
+            ProgramInterfacePName.ActiveResources,
+            &activeUniforms
+        );
+
+        if (activeUniforms == 0)
+        {
+            _uniforms = FrozenDictionary<string, int>.Empty;
+            return;
+        }
+
+        // load buffer with required props
+        ReadOnlySpan<GLEnum> props = ProgramResourceProps;
+        Span<int> values = stackalloc int[props.Length];
+
+        // now let's get uniforms
+        Dictionary<string, int> uniforms = [];
+        
+        fixed (GLEnum* pProps = props)
+        fixed (int* pValues = values)
+        {
+            byte* nameBuf = stackalloc byte[512];
+            for (uint i = 0; i < activeUniforms; i++)
+            {
+                // get props for a uniform
+                gl.GetProgramResource(
+                    Program, ProgramInterface.Uniform,
+                    i,
+                    (uint)props.Length, pProps,
+                    (uint)values.Length, null, pValues
+                );
+
+                // get uniform name and put location into a dictionary
+                gl.GetProgramResourceName(Program, ProgramInterface.Uniform, i, 512, null, nameBuf);
+                uniforms[Marshal.PtrToStringUTF8((nint)nameBuf, values[0] - 1)] = values[1];
+            }
+        }
+
+        _uniforms = uniforms.ToFrozenDictionary();
     }
 
     public void Use()
@@ -49,17 +97,16 @@ public sealed unsafe partial class Effect : IDisposable
 
     public int GetLocation(string uniform)
     {
-#if !DEBUG
-        return Gl.GetUniformLocation(Program, uniform);
-#else
-        int location = Gl.GetUniformLocation(Program, uniform);
-        if (location < 0)
+        if (_uniforms.Count == 0 || !_uniforms.TryGetValue(uniform, out int location) || location == -1)
         {
+#if DEBUG
             throw new ArgumentException("Specified uniform was not found in the shader program", nameof(uniform));
+#else
+            return -1;
+#endif
         }
 
         return location;
-#endif
     }
 
     public void SetValue(int location, float value) => Gl.ProgramUniform1(Program, location, value);
