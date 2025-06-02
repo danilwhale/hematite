@@ -1,6 +1,6 @@
 using Hematite.Resources;
-using ReFuel.Stb;
 using Silk.NET.OpenGL;
+using StbImageSharp;
 
 namespace Hematite.ContentSystem;
 
@@ -21,8 +21,8 @@ public static class Content
         }
 
         using Stream stream = File.OpenRead(Path.Combine(RootPath, TexturesSubDirectory, assetName));
-        using StbImage image = StbImage.Load(stream, StbiImageFormat.Rgba);
-        return Textures[assetName] = new Texture2D(gl ?? Hem.Gl, image.AsSpan<byte>(), (uint)image.Width, (uint)image.Height);
+        ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+        return Textures[assetName] = new Texture2D(gl ?? Hem.Gl, image.Data, (uint)image.Width, (uint)image.Height);
     }
 
     public static Effect GetEffect(GL? gl, string vertexShaderAssetName, string fragmentShaderAssetName)

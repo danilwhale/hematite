@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ReFuel.StbImage" Version="2.1.0" />
       <PackageReference Include="Serilog" Version="4.3.0" />
       <PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
+      <PackageReference Include="StbImageSharp" Version="2.30.15" />
       <PackageReference Include="Vortice.Mathematics" Version="1.9.3" />
     </ItemGroup>
 
