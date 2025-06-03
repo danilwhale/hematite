@@ -1,24 +1,51 @@
 # hematite
-### a crappy framework to get started with the game faster
-lightweight and crappy framework based on OpenGL 4.5, made to start developing the game faster
-and not waste time on reimplementing the wheel over and over.
 
-this framework is *early in development* and i just wanted to separate boilerplate rendering code 
-from my game as soon as possible. so use it for your own risk, don't expect to have a full fledged and
-professional framework with rich class library.
+## a low-level gamedev library
 
-to include the framework you need to add it as git submodule, or just clone it into your solution
-folder, and add `Hematite` project to your solution.
-
-to work with lazy initialized instances of objects you need to set `Hem.Gl` to OpenGL context with
-support for at least OpenGL 4.5 (soon should be 3.3, but don't expect it to happen *really* soon).
-
-to dispose all initialized objects you can call `Hem.DisposeAll`
 > [!CAUTION]
-> do NOT try to access lazy initiailized objects after you call `Hem.DisposeAll`!!!
-> they are NOT getting reset to default values and remain invalid *forever*.
-> you should call `Hem.DisposeAll` *only* after the game lifecycle ends
+> while hematite can sound really cool, it's still *extremely* early in development. you can check
+> out the library later, or even help if you're bored enough. any kind of help, including reporting
+> issues or contributing with pull requests, is appreciated.
 
-### todo
-- [ ] add batching to ImmediateRenderer
-- [ ] add nuget package
+hematite is a low-level game development library, inspired by raylib and Silk.NET, built for both simple prototypes
+and games. the library is written completely in C#, although it may look like it's
+a binding for a native library, it's not. the library is styled like a C library to take a rest
+after passing resources like a hot potato around the project.
+
+### features
+
+- basic multiple window support and easy-to-implement custom platform, in case you don't like builtin SDL3 for whatever
+  reason.
+- todo.
+
+### hello, world!
+
+> [!CAUTION]
+> as stated before, the library is still early in development. an API is subject to change at any moment
+> and isn't guaranteed to stay stable.
+
+```csharp
+using Hematite;
+using Vortice.Mathematics;
+using static Hematite.hmLib;
+
+if (!hmTryInitialize()) return 1;
+
+hmWindowDescriptor descriptor = new()
+{
+    Title = "hello, world!",
+    Size = new SizeI(854, 480),
+    Border = hmWindowBorder.Resizable
+};
+
+hmWindow window = hmWindowSetCurrent(hmMakeWindow(in descriptor)!);
+
+while (!hmWindowShouldClose(null))
+{
+    hmUpdate();
+}
+
+hmDestroyWindow(window);
+hmDestroy();
+return 0;
+```
