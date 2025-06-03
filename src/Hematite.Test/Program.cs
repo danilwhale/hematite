@@ -11,9 +11,7 @@ hmWindowDescriptor descriptor = new()
     Border = hmWindowBorder.Resizable
 };
 
-hmContext context = hmMakeContext();
-context.Window = hmMakeWindow(in descriptor);
-hmContextSetCurrent(context);
+hmWindow window = hmWindowSetCurrent(hmMakeWindow(in descriptor)!);
 
 hmWindowSetMinSize(null, new SizeI(854, 480));
 
@@ -24,6 +22,6 @@ while (!hmWindowShouldClose(null))
     hmUpdate();
 }
 
-hmDestroyContext(context);
+hmDestroyWindow(window);
 hmDestroy();
 return 0;

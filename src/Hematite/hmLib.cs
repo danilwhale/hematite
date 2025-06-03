@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Vortice.Mathematics;
 
 namespace Hematite;
@@ -8,14 +9,10 @@ public static partial class hmLib
     public static partial void hmUpdate();
     public static partial void hmDestroy();
     
-    public static partial hmContext hmMakeContext();
-    public static partial hmContext? hmContextSetCurrent(hmContext? context);
-    public static partial hmContext? hmContextGetCurrent();
-    public static partial void hmDestroyContext(hmContext context);
-
     public static partial hmWindow? hmMakeWindow(ref readonly hmWindowDescriptor descriptor);
-    public static partial hmWindow? hmContextSetCurrentWindow(hmWindow? window);
-    public static partial hmWindow? hmContextGetCurrentWindow();
+    [return: NotNullIfNotNull(nameof(window))] 
+    public static partial hmWindow? hmWindowSetCurrent(hmWindow? window);
+    public static partial hmWindow? hmWindowGetCurrent();
     public static partial bool hmWindowShouldClose(hmWindow? window);
     public static partial hmWindowBorder hmWindowGetBorder(hmWindow? window);
     public static partial void hmWindowSetBorder(hmWindow? window, hmWindowBorder border);
