@@ -142,7 +142,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
         uint buffer = gl.GenBuffer();
         gl.BindBuffer(BufferTargetARB.ArrayBuffer, buffer);
         gl.BufferData(BufferTargetARB.ArrayBuffer, sizeInBytes, null, BufferUsageARB.StaticDraw);
-        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
 
         return new hmBuffer(window, buffer, sizeInBytes);
     }
@@ -156,8 +155,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
         {
             gl.BufferSubData(BufferTargetARB.ArrayBuffer, (nint)offset, (nuint)(data.Length * sizeof(T)), pData);
         }
-
-        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
         return true;
     }
 
@@ -170,8 +167,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
         {
             gl.GetBufferSubData(BufferTargetARB.ArrayBuffer, (nint)offset, (nuint)(data.Length * sizeof(T)), pData);
         }
-
-        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
         return true;
     }
 
@@ -197,7 +192,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
             hmBufferAccess.WriteOnly => BufferAccessARB.WriteOnly,
             hmBufferAccess.ReadWrite => BufferAccessARB.ReadWrite
         });
-        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
 
         return data == 0;
     }
@@ -214,7 +208,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
             hmBufferAccess.WriteOnly => MapBufferAccessMask.WriteBit,
             hmBufferAccess.ReadWrite => MapBufferAccessMask.ReadBit | MapBufferAccessMask.WriteBit
         });
-        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
 
         if (pBuffer == null)
         {
@@ -232,7 +225,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
 
         gl.BindBuffer(BufferTargetARB.ArrayBuffer, buffer.Handle);
         gl.UnmapBuffer(BufferTargetARB.ArrayBuffer);
-        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
 
         return true;
     }
@@ -255,7 +247,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
 
         gl.BindVertexArray(mesh.Handle);
         gl.BindBuffer(BufferTargetARB.ArrayBuffer, vertexBuffer.Handle);
-        gl.BindVertexArray(0);
     }
 
     public void MeshAttachElementBuffer(hmMesh mesh, hmBuffer elementBuffer, hmMeshElementType elementType)
@@ -264,7 +255,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
 
         gl.BindVertexArray(mesh.Handle);
         gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, elementBuffer.Handle);
-        gl.BindVertexArray(0);
     }
 
     public void MeshAttachVertexFormat(hmMesh mesh, hmVertexFormat vertexFormat)
@@ -301,8 +291,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
             index++;
             pointer += (nint)e.SizeInBytes;
         }
-
-        gl.BindVertexArray(0);
     }
 
     public void MeshRender(hmMesh mesh, hmPrimitiveTopology topology, uint baseVertex, uint elementCount)
@@ -337,8 +325,6 @@ internal sealed unsafe class hmGLBackend : hmIGfxBackend
         {
             gl.DrawArrays(mode, (int)baseVertex, elementCount);
         }
-        
-        gl.BindVertexArray(0);
     }
 
     public void DestroyMesh(hmMesh mesh)
