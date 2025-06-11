@@ -1,7 +1,6 @@
-using System.Numerics;
 using Vortice.Mathematics;
 
-namespace Hematite;
+namespace Hematite.Windowing;
 
 public readonly struct hmWindowDescriptor()
 {

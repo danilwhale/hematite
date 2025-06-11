@@ -1,4 +1,6 @@
-namespace Hematite;
+using Hematite.Windowing;
+
+namespace Hematite.Graphics;
 
 public sealed class hmTexture : hmGfxResource
 {

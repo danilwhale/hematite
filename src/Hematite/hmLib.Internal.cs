@@ -1,3 +1,5 @@
+using Hematite.Windowing;
+
 namespace Hematite;
 
 public static partial class hmLib

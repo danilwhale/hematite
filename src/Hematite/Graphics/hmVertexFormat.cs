@@ -1,6 +1,6 @@
 using System.Collections.Frozen;
 
-namespace Hematite;
+namespace Hematite.Graphics;
 
 public sealed class hmVertexFormat
 {

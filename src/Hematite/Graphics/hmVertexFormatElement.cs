@@ -1,4 +1,4 @@
-namespace Hematite;
+namespace Hematite.Graphics;
 
 public readonly struct hmVertexFormatElement(hmVertexFormatElementType type, bool normalized, uint size) 
     : IEquatable<hmVertexFormatElement>

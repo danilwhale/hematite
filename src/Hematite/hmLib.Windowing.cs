@@ -1,3 +1,4 @@
+using Hematite.Windowing;
 using Vortice.Mathematics;
 
 namespace Hematite;

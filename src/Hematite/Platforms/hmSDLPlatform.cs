@@ -1,4 +1,5 @@
 using Hematite.Backends;
+using Hematite.Windowing;
 using SDL;
 using Silk.NET.Core.Contexts;
 using Silk.NET.OpenGL;

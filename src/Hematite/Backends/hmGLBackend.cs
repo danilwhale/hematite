@@ -1,5 +1,7 @@
 using System.Numerics;
+using Hematite.Graphics;
 using Hematite.Platforms;
+using Hematite.Windowing;
 using Silk.NET.OpenGL;
 using Vortice.Mathematics;
 

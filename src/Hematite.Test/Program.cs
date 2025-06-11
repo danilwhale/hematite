@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
-using Hematite;
+using Hematite.Graphics;
+using Hematite.Windowing;
 using Vortice.Mathematics;
 using static Hematite.hmLib;
 

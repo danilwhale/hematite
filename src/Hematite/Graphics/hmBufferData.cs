@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Hematite;
+namespace Hematite.Graphics;
 
 public readonly ref struct hmBufferData
 {

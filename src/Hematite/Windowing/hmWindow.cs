@@ -1,7 +1,6 @@
 using Hematite.Backends;
-using Hematite.Platforms;
 
-namespace Hematite;
+namespace Hematite.Windowing;
 
 public sealed class hmWindow
 {

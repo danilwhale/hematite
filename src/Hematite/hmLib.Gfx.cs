@@ -1,3 +1,5 @@
+using Hematite.Graphics;
+using Hematite.Windowing;
 using StbImageSharp;
 using Vortice.Mathematics;
 

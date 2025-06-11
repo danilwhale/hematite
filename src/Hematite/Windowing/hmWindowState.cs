@@ -1,4 +1,4 @@
-namespace Hematite;
+namespace Hematite.Windowing;
 
 public enum hmWindowState
 {

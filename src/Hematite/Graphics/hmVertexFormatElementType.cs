@@ -1,4 +1,4 @@
-namespace Hematite;
+namespace Hematite.Graphics;
 
 public enum hmVertexFormatElementType
 {
