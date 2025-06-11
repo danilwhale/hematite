@@ -1,16 +1,12 @@
 namespace Hematite;
 
-public sealed class hmBuffer
+public sealed class hmBuffer : hmGfxResource
 {
-    public readonly hmWindow Owner;
-    public readonly uint Handle;
     public readonly uint SizeInBytes;
     internal bool Locked;
     
-    internal hmBuffer(hmWindow owner, uint handle, uint sizeInBytes)
+    internal hmBuffer(hmWindow owner, uint handle, uint sizeInBytes) : base(owner, handle)
     {
-        Owner = owner;
-        Handle = handle;
         SizeInBytes = sizeInBytes;
     }
 }

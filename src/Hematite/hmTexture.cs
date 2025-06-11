@@ -1,13 +1,8 @@
 namespace Hematite;
 
-public sealed class hmTexture
+public sealed class hmTexture : hmGfxResource
 {
-    public readonly hmWindow Owner;
-    public readonly uint Handle;
-
-    internal hmTexture(hmWindow owner, uint handle)
+    internal hmTexture(hmWindow owner, uint handle) : base(owner, handle)
     {
-        Owner = owner;
-        Handle = handle;
     }
 }

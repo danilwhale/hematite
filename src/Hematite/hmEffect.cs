@@ -1,14 +1,9 @@
 namespace Hematite;
 
 // todo idea: maybe add ability to attach custom shaders and then link it all together?
-public sealed class hmEffect
+public sealed class hmEffect : hmGfxResource
 {
-    public readonly hmWindow Owner;
-    public readonly uint Handle;
-
-    internal hmEffect(hmWindow owner, uint handle)
+    internal hmEffect(hmWindow owner, uint handle) : base(owner, handle)
     {
-        Owner = owner;
-        Handle = handle;
     }
 }

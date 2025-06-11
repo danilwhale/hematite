@@ -1,18 +1,13 @@
 namespace Hematite;
 
-public sealed class hmMesh
+public sealed class hmMesh : hmGfxResource
 {
-    public readonly hmWindow Owner;
-    public readonly uint Handle;
-    
     public hmBuffer? VertexBuffer;
     public hmBuffer? ElementBuffer;
     public hmMeshElementType ElementType;
     public hmVertexFormat? VertexFormat;
 
-    internal hmMesh(hmWindow owner, uint handle)
+    internal hmMesh(hmWindow owner, uint handle) : base(owner, handle)
     {
-        Owner = owner;
-        Handle = handle;
     }
 }
