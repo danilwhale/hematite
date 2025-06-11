@@ -1,16 +1,16 @@
-using Hematite.Backends;
-using Hematite.Platforms;
+using Hematite.Graphics.Backends;
+using Hematite.Windowing.Platforms;
 
 namespace Hematite;
 
 public static partial class hmLib
 {
     internal static readonly hmIPlatform Platform = new hmSDLPlatform();
-    internal static readonly hmIGfxBackend GfxBackend = new hmGLBackend();
+    internal static readonly hmIBackend Backend = new hmGLBackend();
     
     public static partial bool hmTryInitialize()
     {
-        return Platform.TryInitialize() && GfxBackend.TryInitialize();
+        return Platform.TryInitialize() && Backend.TryInitialize();
     }
 
     public static partial void hmUpdate()
@@ -21,7 +21,7 @@ public static partial class hmLib
 
     public static partial void hmDestroy()
     {
-        GfxBackend.Destroy();
+        Backend.Destroy();
         Platform.Destroy();
     }
 }

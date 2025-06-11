@@ -1,4 +1,4 @@
-namespace Hematite.Backends;
+namespace Hematite.Graphics.Backends;
 
 internal abstract class hmGfxContext : IDisposable
 {

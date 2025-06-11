@@ -1,13 +1,11 @@
 using System.Numerics;
-using Hematite.Graphics;
-using Hematite.Platforms;
 using Hematite.Windowing;
 using Silk.NET.OpenGL;
 using Vortice.Mathematics;
 
-namespace Hematite.Backends;
+namespace Hematite.Graphics.Backends;
 
-internal sealed unsafe class hmGLBackend : hmIGfxBackend
+internal sealed unsafe class hmGLBackend : hmIBackend
 {
     public bool TryInitialize()
     {

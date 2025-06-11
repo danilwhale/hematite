@@ -1,10 +1,9 @@
-using Hematite.Graphics;
 using Hematite.Windowing;
 using Vortice.Mathematics;
 
-namespace Hematite.Backends;
+namespace Hematite.Graphics.Backends;
 
-internal interface hmIGfxBackend
+internal interface hmIBackend
 {
     bool TryInitialize();
     void Destroy();

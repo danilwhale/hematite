@@ -1,12 +1,10 @@
-using Hematite.Backends;
-using Hematite.Windowing;
+using Hematite.Graphics.Backends;
 using SDL;
-using Silk.NET.Core.Contexts;
 using Silk.NET.OpenGL;
 using Vortice.Mathematics;
 using static SDL.SDL3;
 
-namespace Hematite.Platforms;
+namespace Hematite.Windowing.Platforms;
 
 internal sealed unsafe class hmSDLPlatform : hmIPlatform
 {
@@ -43,7 +41,7 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
         if (SDL_WasInit(SDL_InitFlags.SDL_INIT_VIDEO) == 0) return null;
         
         SDL_WindowFlags flags = 0;
-        if (hmLib.GfxBackend is hmGLBackend) flags |= SDL_WindowFlags.SDL_WINDOW_OPENGL;
+        if (hmLib.Backend is hmGLBackend) flags |= SDL_WindowFlags.SDL_WINDOW_OPENGL;
         if (descriptor.AlwaysOnTop) flags |= SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
         if (descriptor.Transparent) flags |= SDL_WindowFlags.SDL_WINDOW_TRANSPARENT;
         if (descriptor.NotFocusable) flags |= SDL_WindowFlags.SDL_WINDOW_NOT_FOCUSABLE;
@@ -71,7 +69,7 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
 
         static hmGfxContext MakeGfxContext(SDL_Window* window)
         {
-            switch (hmLib.GfxBackend)
+            switch (hmLib.Backend)
             {
                 case hmGLBackend:
                     SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ACCELERATED_VISUAL, 1);

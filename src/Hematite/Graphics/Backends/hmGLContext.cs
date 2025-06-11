@@ -1,6 +1,6 @@
 using Silk.NET.OpenGL;
 
-namespace Hematite.Backends;
+namespace Hematite.Graphics.Backends;
 
 internal sealed class hmGLContext(GL gl) : hmGfxContext
 {

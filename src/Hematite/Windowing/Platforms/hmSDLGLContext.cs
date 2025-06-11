@@ -4,7 +4,7 @@ using Silk.NET.Core.Contexts;
 using Silk.NET.Core.Loader;
 using static SDL.SDL3;
 
-namespace Hematite.Platforms;
+namespace Hematite.Windowing.Platforms;
 
 public sealed unsafe class hmSDLGLContext(SDL_Window* window, SDL_GLContextState* context) : IGLContext
 {

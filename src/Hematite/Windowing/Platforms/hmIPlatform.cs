@@ -1,7 +1,6 @@
-using Hematite.Windowing;
 using Vortice.Mathematics;
 
-namespace Hematite.Platforms;
+namespace Hematite.Windowing.Platforms;
 
 internal interface hmIPlatform
 {
