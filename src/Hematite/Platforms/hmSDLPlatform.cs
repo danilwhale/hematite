@@ -1,4 +1,7 @@
+using Hematite.Backends;
 using SDL;
+using Silk.NET.Core.Contexts;
+using Silk.NET.OpenGL;
 using Vortice.Mathematics;
 using static SDL.SDL3;
 
@@ -38,7 +41,8 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
     {
         if (SDL_WasInit(SDL_InitFlags.SDL_INIT_VIDEO) == 0) return null;
         
-        SDL_WindowFlags flags = SDL_WindowFlags.SDL_WINDOW_OPENGL;
+        SDL_WindowFlags flags = 0;
+        if (hmLib.GfxBackend is hmGLBackend) flags |= SDL_WindowFlags.SDL_WINDOW_OPENGL;
         if (descriptor.AlwaysOnTop) flags |= SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
         if (descriptor.Transparent) flags |= SDL_WindowFlags.SDL_WINDOW_TRANSPARENT;
         if (descriptor.NotFocusable) flags |= SDL_WindowFlags.SDL_WINDOW_NOT_FOCUSABLE;
@@ -62,12 +66,45 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
         {
             SDL_SetWindowPosition(win, descriptor.Position.Value.X, descriptor.Position.Value.Y);
         }
-        return _windows[SDL_GetWindowID(win)] = new hmWindow((nint)win);
+        return _windows[SDL_GetWindowID(win)] = new hmWindow((nint)win, MakeGfxContext(win));
+
+        static hmGfxContext MakeGfxContext(SDL_Window* window)
+        {
+            switch (hmLib.GfxBackend)
+            {
+                case hmGLBackend:
+                    SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ACCELERATED_VISUAL, 1);
+                    SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DOUBLEBUFFER, 1);
+                    SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DEPTH_SIZE, 24);
+                    SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_STENCIL_SIZE, 8);
+                    // let's use 3.3 for now
+                    SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+                    SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+                    SDL_GLContextState* context = SDL_GL_CreateContext(window);
+                    SDL_GL_MakeCurrent(window, context);
+                    
+                    GL gl = GL.GetApi(new hmSDLGLContext(window, context));
+                    return new hmGLContext(gl);
+                default:
+                    // we just hope that no other backend magically appear for now
+                    return null;
+            }
+        }
     }
 
     public bool WindowShouldClose(hmWindow window)
     {
         return window.ShouldClose;
+    }
+
+    public void WindowUpdate(hmWindow window)
+    {
+        SDL_Window* win = (SDL_Window*)window.Handle;
+        if ((SDL_GetWindowFlags(win) & SDL_WindowFlags.SDL_WINDOW_OPENGL) != 0)
+        {
+            SDL_GL_SwapWindow(win);
+        }
     }
 
     public hmWindowBorder WindowGetBorder(hmWindow window)

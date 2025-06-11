@@ -10,6 +10,7 @@ internal interface hmIPlatform
     
     hmWindow? MakeWindow(ref readonly hmWindowDescriptor descriptor);
     bool WindowShouldClose(hmWindow window);
+    void WindowUpdate(hmWindow window);
     hmWindowBorder WindowGetBorder(hmWindow window);
     void WindowSetBorder(hmWindow window, hmWindowBorder border);
     hmWindowState WindowGetState(hmWindow window);
