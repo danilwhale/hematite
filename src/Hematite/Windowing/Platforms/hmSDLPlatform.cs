@@ -9,13 +9,13 @@ namespace Hematite.Windowing.Platforms;
 internal sealed unsafe class hmSDLPlatform : hmIPlatform
 {
     private readonly Dictionary<SDL_WindowID, hmWindow> _windows = [];
-    
+
     public bool TryInitialize()
     {
         if (SDL_WasInit(SDL_InitFlags.SDL_INIT_VIDEO) != 0) return false;
         return SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
     }
-    
+
     public void Update()
     {
         SDL_Event ev;
@@ -23,6 +23,13 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
         {
             switch (ev.Type)
             {
+                case SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+                    hmLib.Backend.WindowHandleResize(
+                        _windows[ev.window.windowID],
+                        Math.Max(1, ev.window.data1),
+                        Math.Max(1, ev.window.data2)
+                    );
+                    break;
                 case SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
                     _windows[ev.window.windowID].ShouldClose = true;
                     break;
@@ -39,7 +46,7 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
     public hmWindow? MakeWindow(ref readonly hmWindowDescriptor descriptor)
     {
         if (SDL_WasInit(SDL_InitFlags.SDL_INIT_VIDEO) == 0) return null;
-        
+
         SDL_WindowFlags flags = 0;
         if (hmLib.Backend is hmGLBackend) flags |= SDL_WindowFlags.SDL_WINDOW_OPENGL;
         if (descriptor.AlwaysOnTop) flags |= SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
@@ -65,6 +72,7 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
         {
             SDL_SetWindowPosition(win, descriptor.Position.Value.X, descriptor.Position.Value.Y);
         }
+
         return _windows[SDL_GetWindowID(win)] = new hmWindow((nint)win, MakeGfxContext(win));
 
         static hmGfxContext MakeGfxContext(SDL_Window* window)
@@ -82,7 +90,7 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
 
                     SDL_GLContextState* context = SDL_GL_CreateContext(window);
                     SDL_GL_MakeCurrent(window, context);
-                    
+
                     GL gl = GL.GetApi(new hmSDLGLContext(window, context));
                     return new hmGLContext(gl);
                 default:
@@ -120,10 +128,10 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
     {
         SDL_Window* win = (SDL_Window*)window.Handle;
         SDL_WindowFlags flags = SDL_GetWindowFlags(win);
-        
+
         bool isBorderless = (flags & SDL_WindowFlags.SDL_WINDOW_BORDERLESS) != 0;
         bool isResizable = (flags & SDL_WindowFlags.SDL_WINDOW_RESIZABLE) != 0;
-        
+
         SDL_SetWindowBordered(win, !(isBorderless || border == hmWindowBorder.Borderless));
         SDL_SetWindowResizable(win, isResizable || border == hmWindowBorder.Resizable);
     }
@@ -146,18 +154,18 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
     {
         SDL_Window* win = (SDL_Window*)window.Handle;
         SDL_WindowFlags flags = SDL_GetWindowFlags(win);
-        
+
         bool isMaximized = (flags & SDL_WindowFlags.SDL_WINDOW_MAXIMIZED) != 0;
         bool isMinimized = (flags & SDL_WindowFlags.SDL_WINDOW_MINIMIZED) != 0;
         bool isFullscreen = (flags & SDL_WindowFlags.SDL_WINDOW_FULLSCREEN) != 0;
         bool isHidden = (flags & SDL_WindowFlags.SDL_WINDOW_HIDDEN) != 0;
-        
+
         if (isMaximized || state == hmWindowState.Maximized) SDL_MaximizeWindow(win);
         else if (isMinimized || state == hmWindowState.Minimized) SDL_MinimizeWindow(win);
         else SDL_RestoreWindow(win);
-        
+
         SDL_SetWindowFullscreen(win, isFullscreen || state == hmWindowState.Fullscreen);
-        
+
         if (isHidden || state == hmWindowState.Hidden) SDL_HideWindow(win);
         else SDL_ShowWindow(win);
     }
@@ -233,7 +241,7 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
     public void DestroyWindow(hmWindow window)
     {
         SDL_Window* win = (SDL_Window*)window.Handle;
-        
+
         _windows.Remove(SDL_GetWindowID(win));
         SDL_DestroyWindow(win);
     }

@@ -16,6 +16,12 @@ internal sealed unsafe class hmGLBackend : hmIBackend
     {
     }
 
+    public void WindowHandleResize(hmWindow window, int newWidth, int newHeight)
+    {
+        GL gl = ((hmGLContext)window.GfxContext).Gl;
+        gl.Viewport(0, 0, (uint)newWidth, (uint)newHeight);
+    }
+
     public void WindowClearColor(hmWindow window, Color color)
     {
         GL gl = ((hmGLContext)window.GfxContext).Gl;

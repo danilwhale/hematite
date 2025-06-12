@@ -8,6 +8,10 @@ internal interface hmIBackend
     bool TryInitialize();
     void Destroy();
     
+    // internal >>
+    void WindowHandleResize(hmWindow window, int newWidth, int newHeight);
+    // <<
+    
     // core >>
     void WindowClearColor(hmWindow window, Color color);
     void WindowClearDepth(hmWindow window, double depth);
