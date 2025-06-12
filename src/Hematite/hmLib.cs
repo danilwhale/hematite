@@ -19,6 +19,7 @@ public static partial class hmLib
     public static partial hmWindow? hmWindowSetCurrent(hmWindow? window);
     public static partial hmWindow? hmWindowGetCurrent();
     public static partial bool hmWindowShouldClose(hmWindow? window);
+    public static partial void hmWindowClose(hmWindow? window);
     public static partial bool hmWindowWasResized(hmWindow? window);
     public static partial bool hmWindowWasMoved(hmWindow? window);
     public static partial void hmWindowUpdate(hmWindow? window);

@@ -26,6 +26,13 @@ public static partial class hmLib
         return window is null || window.ShouldClose;
     }
     
+    public static partial void hmWindowClose(hmWindow? window)
+    {
+        window ??= GetCurrentWindowOrNull(window);
+        if (window is null) return;
+        window.ShouldClose = true;
+    }
+    
     public static partial bool hmWindowWasResized(hmWindow? window)
     {
         window ??= GetCurrentWindowOrNull(window);
