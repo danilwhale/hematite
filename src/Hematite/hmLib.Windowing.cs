@@ -23,7 +23,25 @@ public static partial class hmLib
     public static partial bool hmWindowShouldClose(hmWindow? window)
     {
         window ??= GetCurrentWindowOrNull(window);
-        return window is null || Platform.WindowShouldClose(window);
+        return window is null || window.ShouldClose;
+    }
+    
+    public static partial bool hmWindowWasResized(hmWindow? window)
+    {
+        window ??= GetCurrentWindowOrNull(window);
+        if (window is null) return false;
+        bool wasResized = window.WasResized;
+        window.WasResized = false;
+        return wasResized;
+    }
+
+    public static partial bool hmWindowWasMoved(hmWindow? window)
+    {
+        window ??= GetCurrentWindowOrNull(window);
+        if (window is null) return false;
+        bool wasMoved = window.WasMoved;
+        window.WasMoved = false;
+        return wasMoved;
     }
     
     public static partial void hmWindowUpdate(hmWindow? window)

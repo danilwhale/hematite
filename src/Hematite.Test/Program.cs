@@ -67,6 +67,12 @@ hmMeshAttachVertexFormat(mesh, new hmVertexFormat(
 
 while (!hmWindowShouldClose(null))
 {
+    if (hmWindowWasResized(null))
+    {
+        SizeI newSize = hmWindowGetSize(null);
+        Console.WriteLine("new size: {0}", newSize);
+    }
+    
     hmWindowClearColor(null, new Color(0.2f, 0.4f, 0.8f));
     hmEffectUse(effect);
     hmMeshRender(mesh, hmPrimitiveTopology.TriangleList, 0, 3);

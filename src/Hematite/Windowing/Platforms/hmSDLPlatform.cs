@@ -24,11 +24,18 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
             switch (ev.Type)
             {
                 case SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+                {
+                    hmWindow window = _windows[ev.window.windowID];
                     hmLib.Backend.WindowHandleResize(
-                        _windows[ev.window.windowID],
+                        window,
                         Math.Max(1, ev.window.data1),
                         Math.Max(1, ev.window.data2)
                     );
+                    window.WasResized = true;
+                    break;
+                }
+                case SDL_EventType.SDL_EVENT_WINDOW_MOVED:
+                    _windows[ev.window.windowID].WasMoved = true;
                     break;
                 case SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
                     _windows[ev.window.windowID].ShouldClose = true;
@@ -98,11 +105,6 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
                     return null;
             }
         }
-    }
-
-    public bool WindowShouldClose(hmWindow window)
-    {
-        return window.ShouldClose;
     }
 
     public void WindowUpdate(hmWindow window)
