@@ -400,18 +400,6 @@ internal sealed unsafe class hmSDLPlatform : hmIPlatform
         SDL_WarpMouseInWindow((SDL_Window*)window.Handle, position.X, position.Y);
     }
 
-    public Vector2 InputGetMouseVelocity(hmWindow window)
-    {
-        if (SDL_GetWindowRelativeMouseMode((SDL_Window*)window.Handle))
-        {
-            float x, y;
-            SDL_GetRelativeMouseState(&x, &y);
-            return new Vector2(x, y);
-        }
-
-        return window.MousePosition - window.LastMousePosition;
-    }
-
     public void InputSetMouseLocked(hmWindow window, bool locked)
     {
         SDL_SetWindowRelativeMouseMode((SDL_Window*)window.Handle, locked);

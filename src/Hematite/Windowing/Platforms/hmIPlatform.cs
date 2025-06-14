@@ -37,7 +37,6 @@ internal interface hmIPlatform
     // <<
     // mouse >>
     void InputWarpMouse(hmWindow window, Vector2 position);
-    Vector2 InputGetMouseVelocity(hmWindow window);
     void InputSetMouseLocked(hmWindow window, bool locked);
     bool InputIsMouseLocked(hmWindow window);
     // <<

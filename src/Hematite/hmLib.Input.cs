@@ -75,7 +75,7 @@ public static partial class hmLib
     public static partial Vector2 hmInputGetMouseVelocity(hmWindow? window)
     {
         window ??= CurrentWindow;
-        return window is null ? default : Platform.InputGetMouseVelocity(window);
+        return window is null ? default : window.MousePosition - window.LastMousePosition;
     }
 
     public static partial Vector2 hmInputGetMouseWheelVelocity(hmWindow? window)
