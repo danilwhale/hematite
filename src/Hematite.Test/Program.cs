@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Hematite.Graphics;
+using Hematite.Input;
 using Hematite.Windowing;
 using Vortice.Mathematics;
 using static Hematite.hmLib;
@@ -65,12 +66,14 @@ hmMeshAttachVertexFormat(mesh, new hmVertexFormat(
     new hmVertexFormatElement(hmVertexFormatElementType.UnsignedByte, true, 4)
 ));
 
+hmInputSetMouseLocked(null, true);
+
 while (!hmWindowShouldClose(null))
 {
-    if (hmWindowWasResized(null))
+    hmWindowSetTitle(null, hmInputGetMouseVelocity(null).ToString());
+    if (hmInputIsKeyJustPressed(null, hmKeyCode.Escape))
     {
-        SizeI newSize = hmWindowGetSize(null);
-        Console.WriteLine("new size: {0}", newSize);
+        hmInputSetMouseLocked(null, !hmInputIsMouseLocked(null));
     }
     
     hmWindowClearColor(null, new Color(0.2f, 0.4f, 0.8f));

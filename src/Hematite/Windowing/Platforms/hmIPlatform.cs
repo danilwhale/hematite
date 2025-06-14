@@ -1,3 +1,5 @@
+using System.Numerics;
+using Hematite.Input;
 using Vortice.Mathematics;
 
 namespace Hematite.Windowing.Platforms;
@@ -8,6 +10,7 @@ internal interface hmIPlatform
     void Update();
     void Destroy();
     
+    // windowing >>>
     hmWindow? MakeWindow(ref readonly hmWindowDescriptor descriptor);
     void WindowUpdate(hmWindow window);
     hmWindowBorder WindowGetBorder(hmWindow window);
@@ -27,4 +30,18 @@ internal interface hmIPlatform
     float WindowGetOpacity(hmWindow window);
     void WindowSetOpacity(hmWindow window, float opacity);
     void DestroyWindow(hmWindow window);
+    // <<<
+    
+    // input >>>
+    // keyboard >>
+    // <<
+    // mouse >>
+    void InputWarpMouse(hmWindow window, Vector2 position);
+    Vector2 InputGetMouseVelocity(hmWindow window);
+    void InputSetMouseLocked(hmWindow window, bool locked);
+    bool InputIsMouseLocked(hmWindow window);
+    // <<
+    // TODO gamepad >>
+    // <<
+    // <<<
 }

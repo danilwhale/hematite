@@ -9,8 +9,8 @@ public static partial class hmLib
 
     public static partial void hmUpdate()
     {
+        if (CurrentWindow is not null) UpdateWindow(CurrentWindow);
         Platform.Update();
-        if (Window is not null) Platform.WindowUpdate(Window);
     }
 
     public static partial void hmDestroy()

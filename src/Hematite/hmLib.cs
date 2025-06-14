@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using Hematite.Graphics;
+using Hematite.Input;
 using Hematite.Windowing;
 using Vortice.Mathematics;
 
@@ -40,6 +42,28 @@ public static partial class hmLib
     public static partial float hmWindowGetOpacity(hmWindow? window);
     public static partial void hmWindowSetOpacity(hmWindow? window, float opacity);
     public static partial void hmDestroyWindow(hmWindow window);
+    // <<<
+    
+    // input >>>
+    // keyboard >>
+    public static partial bool hmInputIsKeyPressed(hmWindow? window, hmKeyCode key);
+    public static partial bool hmInputIsKeyJustPressed(hmWindow? window, hmKeyCode key);
+    public static partial bool hmInputIsKeyJustReleased(hmWindow? window, hmKeyCode key);
+    public static partial int hmInputGetKeyAxis(hmWindow? window, hmKeyCode negativeKey, hmKeyCode positiveKey);
+    // <<
+    // mouse >>
+    public static partial bool hmInputIsMouseButtonPressed(hmWindow? window, hmMouseButton button);
+    public static partial bool hmInputIsMouseButtonJustPressed(hmWindow? window, hmMouseButton button);
+    public static partial bool hmInputIsMouseButtonJustReleased(hmWindow? window, hmMouseButton button);
+    public static partial Vector2 hmInputGetMousePosition(hmWindow? window);
+    public static partial void hmInputWarpMouse(hmWindow? window, Vector2 position);
+    public static partial Vector2 hmInputGetMouseVelocity(hmWindow? window);
+    public static partial Vector2 hmInputGetMouseWheelVelocity(hmWindow? window);
+    public static partial void hmInputSetMouseLocked(hmWindow? window, bool locked);
+    public static partial bool hmInputIsMouseLocked(hmWindow? window);
+    // <<
+    // TODO gamepad >>
+    // <<
     // <<<
     
     // gfx >>>

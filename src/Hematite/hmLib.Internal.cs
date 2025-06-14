@@ -1,4 +1,5 @@
 using Hematite.Graphics.Backends;
+using Hematite.Input;
 using Hematite.Windowing;
 using Hematite.Windowing.Platforms;
 
@@ -8,16 +9,20 @@ public static partial class hmLib
 {
     internal static readonly hmIPlatform Platform = new hmSDLPlatform();
     internal static readonly hmIBackend Backend = new hmGLBackend();
-    [ThreadStatic] internal static hmWindow? Window;
+    [ThreadStatic] internal static hmWindow? CurrentWindow;
 
-    private static hmWindow? GetCurrentWindowOrNull(hmWindow? window)
+    internal static void UpdateWindow(hmWindow window)
     {
-        if (window is null)
+        foreach ((hmKeyCode key, bool pressed) in window.KeyboardState)
         {
-            if (Window is null) return null;
-            window ??= Window;
+            window.LastKeyboardState[key] = pressed;
         }
-
-        return window;
+        foreach ((hmMouseButton button, bool pressed) in window.MouseState)
+        {
+            window.LastMouseState[button] = pressed;
+        }
+        window.LastMousePosition = window.MousePosition;
+        window.MouseWheelVelocity = default;
+        Platform.WindowUpdate(window);
     }
 }

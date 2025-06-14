@@ -9,31 +9,31 @@ public static unsafe partial class hmLib
 {
     public static partial void hmWindowClearColor(hmWindow? window, Color color)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         if (window is not null) Backend.WindowClearColor(window, color);
     }
 
     public static partial void hmWindowClearDepth(hmWindow? window, double depth)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         if (window is not null) Backend.WindowClearDepth(window, depth);
     }
 
     public static partial void hmWindowClear(hmWindow? window, Color color, double depth)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         if (window is not null) Backend.WindowClear(window, color, depth);
     }
     
     public static partial hmTexture? hmTextureLoad(hmWindow? window, ReadOnlySpan<byte> pixels, uint width, uint height, hmPixelFormat format)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         return window is null ? null : Backend.TextureLoad(window, pixels, width, height, format);
     }
 
     public static partial hmTexture? hmTextureLoadFile(hmWindow? window, string path)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         if (window is null) return null;
 
         using Stream stream = File.OpenRead(path);
@@ -53,13 +53,13 @@ public static unsafe partial class hmLib
 
     public static partial hmEffect? hmEffectLoad(hmWindow? window, string vertexSource, string fragmentSource)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         return window is null ? null : Backend.EffectLoad(window, vertexSource, fragmentSource);
     }
 
     public static partial hmEffect? hmEffectLoadFile(hmWindow? window, string vertexPath, string fragmentPath)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         if (window is null) return null;
 
         string vertexSource = File.ReadAllText(vertexPath);
@@ -79,13 +79,13 @@ public static unsafe partial class hmLib
 
     public static partial hmBuffer? hmMakeBuffer(hmWindow? window, uint sizeInBytes)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         return window is null ? null : Backend.MakeBuffer(window, sizeInBytes);
     }
     
     public static partial hmBuffer? hmMakeBuffer<T>(hmWindow? window, uint size) where T : unmanaged
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         return window is null ? null : Backend.MakeBuffer(window, (uint)(size * sizeof(T)));
     }
 
@@ -171,7 +171,7 @@ public static unsafe partial class hmLib
 
     public static partial hmMesh? hmMakeMesh(hmWindow? window)
     {
-        window ??= GetCurrentWindowOrNull(window);
+        window ??= CurrentWindow;
         return window is null ? null : Backend.MakeMesh(window);
     }
 
