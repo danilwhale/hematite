@@ -2,7 +2,7 @@ using Hematite.Windowing;
 
 namespace Hematite.Graphics;
 
-public sealed class hmMesh : hmGfxResource
+public sealed class hmMesh : hmGfxResource<hmWindow>
 {
     public hmBuffer? VertexBuffer;
     public hmBuffer? ElementBuffer;
