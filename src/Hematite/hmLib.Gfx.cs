@@ -108,17 +108,8 @@ public static unsafe partial class hmLib
     {
         uint sizeInBytes = Backend.BufferGetSizeInBytes(buffer);
 
-        return sizeof(T) switch
-        {
-            // we can't trust compiler, it's stupid
-            1 => sizeInBytes,
-            2 => sizeInBytes >> 1,
-            4 => sizeInBytes >> 2,
-            8 => sizeInBytes >> 3,
-            
-            // unfortunate
-            _ => (uint)(sizeInBytes / sizeof(T))
-        };
+        int toSize = sizeof(T);
+        return toSize == 1 ? sizeInBytes : sizeInBytes / (uint)toSize;
     }
 
     public static partial void hmDestroyBuffer(hmBuffer buffer)
