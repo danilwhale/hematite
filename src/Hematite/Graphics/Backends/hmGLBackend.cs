@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hematite.Windowing;
 using Silk.NET.OpenGL;
@@ -187,23 +188,29 @@ internal sealed unsafe class hmGLBackend : hmIBackend
         return (uint)size;
     }
 
-    public bool BufferTryLock(hmBuffer buffer, hmBufferAccess access, out nint data)
+    public bool BufferTryLock(hmBuffer buffer, hmBufferAccess access, [NotNullWhen(true)] out hmBufferData? data)
     {
         GL gl = ((hmGLContext)buffer.Owner.GfxContext).Gl;
 
         gl.BindBuffer(BufferTargetARB.ArrayBuffer, buffer.Handle);
-        data = (nint)gl.MapBuffer(BufferTargetARB.ArrayBuffer, access switch
+        void* pBuffer = gl.MapBuffer(BufferTargetARB.ArrayBuffer, access switch
         {
             hmBufferAccess.ReadOnly => BufferAccessARB.ReadOnly,
             hmBufferAccess.WriteOnly => BufferAccessARB.WriteOnly,
             hmBufferAccess.ReadWrite => BufferAccessARB.ReadWrite
         });
+        if (pBuffer == null)
+        {
+            data = null;
+            return false;
+        }
 
-        return data == 0;
+        data = new hmBufferData(buffer, pBuffer, buffer.SizeInBytes, access);
+        return true;
     }
 
     public bool BufferTryLock(hmBuffer buffer, uint offset, uint sizeInBytes, hmBufferAccess access,
-        out hmBufferData data)
+        [NotNullWhen(true)] out hmBufferData? data)
     {
         GL gl = ((hmGLContext)buffer.Owner.GfxContext).Gl;
 
@@ -217,11 +224,11 @@ internal sealed unsafe class hmGLBackend : hmIBackend
 
         if (pBuffer == null)
         {
-            data = default;
+            data = null;
             return false;
         }
 
-        data = new hmBufferData(buffer, new Span<byte>(pBuffer, (int)sizeInBytes), access);
+        data = new hmBufferData(buffer, pBuffer, sizeInBytes, access);
         return true;
     }
 

@@ -94,9 +94,9 @@ public static partial class hmLib
     public static partial bool hmBufferTryRead<T>(hmBuffer buffer, Span<T> data, uint offsetInBytes) where T : unmanaged;
     public static partial uint hmBufferGetSizeInBytes(hmBuffer buffer);
     public static partial uint hmBufferGetSize<T>(hmBuffer buffer) where T : unmanaged;
-    public static partial bool hmBufferTryLock(hmBuffer buffer, hmBufferAccess access, out nint data);
-    public static partial bool hmBufferTryLock(hmBuffer buffer, uint offsetInBytes, uint sizeInBytes, hmBufferAccess access, out hmBufferData data);
-    public static partial bool hmBufferTryLock<T>(hmBuffer buffer, uint offsetInBytes, uint size, hmBufferAccess access, out hmBufferData data) where T : unmanaged;
+    public static partial bool hmBufferTryLock(hmBuffer buffer, hmBufferAccess access, [NotNullWhen(true)] out hmBufferData? data);
+    public static partial bool hmBufferTryLock(hmBuffer buffer, uint offsetInBytes, uint sizeInBytes, hmBufferAccess access, [NotNullWhen(true)] out hmBufferData? data);
+    public static partial bool hmBufferTryLock<T>(hmBuffer buffer, uint offsetInBytes, uint size, hmBufferAccess access, [NotNullWhen(true)] out hmBufferData? data) where T : unmanaged;
     public static partial bool hmBufferTryUnlock(hmBuffer buffer);
     public static partial void hmDestroyBuffer(hmBuffer buffer);
     // <<

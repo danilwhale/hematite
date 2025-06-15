@@ -126,11 +126,11 @@ public static unsafe partial class hmLib
         Backend.DestroyBuffer(buffer);
     }
     
-    public static partial bool hmBufferTryLock(hmBuffer buffer, hmBufferAccess access, out nint data)
+    public static partial bool hmBufferTryLock(hmBuffer buffer, hmBufferAccess access, out hmBufferData? data)
     {
         if (buffer.Locked)
         {
-            data = 0;
+            data = null;
             return false;
         }
 
@@ -138,11 +138,11 @@ public static unsafe partial class hmLib
         return Backend.BufferTryLock(buffer, access, out data);
     }
 
-    public static partial bool hmBufferTryLock(hmBuffer buffer, uint offsetInBytes, uint sizeInBytes, hmBufferAccess access, out hmBufferData data)
+    public static partial bool hmBufferTryLock(hmBuffer buffer, uint offsetInBytes, uint sizeInBytes, hmBufferAccess access, out hmBufferData? data)
     {
         if (buffer.Locked)
         {
-            data = default;
+            data = null;
             return false;
         }
 
@@ -150,11 +150,11 @@ public static unsafe partial class hmLib
         return Backend.BufferTryLock(buffer, offsetInBytes, sizeInBytes, access, out data);
     }
     
-    public static partial bool hmBufferTryLock<T>(hmBuffer buffer, uint offsetInBytes, uint size, hmBufferAccess access, out hmBufferData data) where T : unmanaged
+    public static partial bool hmBufferTryLock<T>(hmBuffer buffer, uint offsetInBytes, uint size, hmBufferAccess access, out hmBufferData? data) where T : unmanaged
     {
         if (buffer.Locked)
         {
-            data = default;
+            data = null;
             return false;
         }
 

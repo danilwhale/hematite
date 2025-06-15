@@ -56,7 +56,11 @@ Span<Vertex> vertices =
 ];
 hmBuffer? vertexBuffer = hmMakeBuffer<Vertex>(null, (uint)vertices.Length);
 if (vertexBuffer == null) return 1;
-if (!hmBufferTryWrite<Vertex>(vertexBuffer, vertices, 0)) return 1;
+if (hmBufferTryLock(vertexBuffer, 0, vertexBuffer.SizeInBytes, hmBufferAccess.WriteOnly, out hmBufferData? data))
+{
+    vertices.CopyTo(data.AsSpan<Vertex>());
+    hmBufferTryUnlock(vertexBuffer);
+}
 
 hmMesh? mesh = hmMakeMesh(null);
 if (mesh == null) return 1;

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Hematite.Windowing;
 using Vortice.Mathematics;
 
@@ -35,8 +36,8 @@ internal interface hmIBackend
     bool BufferTryWrite<T>(hmBuffer buffer, ReadOnlySpan<T> data, uint offset) where T : unmanaged;
     bool BufferTryRead<T>(hmBuffer buffer, Span<T> data, uint offset) where T : unmanaged;
     uint BufferGetSizeInBytes(hmBuffer buffer);
-    bool BufferTryLock(hmBuffer buffer, hmBufferAccess access, out IntPtr data);
-    bool BufferTryLock(hmBuffer buffer, uint offset, uint sizeInBytes, hmBufferAccess access, out hmBufferData data);
+    bool BufferTryLock(hmBuffer buffer, hmBufferAccess access, [NotNullWhen(true)] out hmBufferData? data);
+    bool BufferTryLock(hmBuffer buffer, uint offset, uint sizeInBytes, hmBufferAccess access, [NotNullWhen(true)] out hmBufferData? data);
     bool BufferTryUnlock(hmBuffer buffer);
     void DestroyBuffer(hmBuffer buffer);
     // <<
