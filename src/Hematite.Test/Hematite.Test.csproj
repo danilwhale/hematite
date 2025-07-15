@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Hematite.Windowing.Sdl\Hematite.Windowing.Sdl.csproj" />
       <ProjectReference Include="..\Hematite\Hematite.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="ppy.SDL3-CS" Version="2025.220.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     </ItemGroup>
 
