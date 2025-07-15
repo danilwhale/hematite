@@ -6,13 +6,15 @@ namespace Hematite.Windowing.SDL;
 
 public sealed unsafe class SdlPlatform : Platform
 {
+    public const string Identifier = "hematite.sdl3";
+    
     public static void Register()
     {
         TryRegister(new SdlPlatform());
     }
 
     public override string Name => "SDL3";
-    public override string UniqueName => "hematite.sdl3";
+    public override string UniqueName => Identifier;
 
     public override bool IsUsable
     {
