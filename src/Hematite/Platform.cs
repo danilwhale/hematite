@@ -37,7 +37,7 @@ public abstract class Platform : IEquatable<Platform>
         }
     }
 
-    public static bool TryRegister<T>(T platform) where T : Platform
+    public static bool TryRegister(Platform platform)
     {
         if (RegisteredPlatforms.Contains(platform)) return false;
 
@@ -60,6 +60,5 @@ public abstract class Platform : IEquatable<Platform>
     public override bool Equals(object? obj) => obj is Platform other && Equals(other);
 
     public static bool operator ==(Platform? left, Platform? right) => Equals(left, right);
-
     public static bool operator !=(Platform? left, Platform? right) => !Equals(left, right);
 }
