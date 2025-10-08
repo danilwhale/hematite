@@ -1,4 +1,4 @@
-namespace Hematite.Graphics;
+namespace Hematite.Platforms;
 
 [Flags]
 public enum DriverApi

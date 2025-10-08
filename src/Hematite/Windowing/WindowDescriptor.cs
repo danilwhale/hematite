@@ -1,4 +1,5 @@
 using Hematite.Graphics;
+using Hematite.Platforms;
 using Vortice.Mathematics;
 
 namespace Hematite.Windowing;
