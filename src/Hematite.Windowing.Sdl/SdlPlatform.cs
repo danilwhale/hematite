@@ -34,7 +34,7 @@ public sealed unsafe class SdlPlatform : Platform
     {
     }
 
-    public override Window MakeWindow(in WindowDescriptor descriptor)
+    public override Window MakeWindow(ref readonly WindowDescriptor windowDescriptor, ref readonly GraphicsDeviceDescriptor deviceDescriptor, Driver driver)
     {
         if (!SDL_InitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO))
         {
@@ -44,7 +44,7 @@ public sealed unsafe class SdlPlatform : Platform
         SDL_WindowFlags flags = 0;
 
         // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
-        switch (descriptor.Api)
+        switch (windowDescriptor.Api)
         {
             case DriverApi.OpenGl:
                 flags |= SDL_WindowFlags.SDL_WINDOW_OPENGL;
@@ -57,16 +57,16 @@ public sealed unsafe class SdlPlatform : Platform
                 flags |= SDL_WindowFlags.SDL_WINDOW_METAL;
                 break;
         }
-        if (descriptor.AlwaysOnTop) flags |= SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
-        if (descriptor.Transparent) flags |= SDL_WindowFlags.SDL_WINDOW_TRANSPARENT;
-        if (descriptor.NotFocusable) flags |= SDL_WindowFlags.SDL_WINDOW_NOT_FOCUSABLE;
-        flags |= descriptor.Border switch
+        if (windowDescriptor.AlwaysOnTop) flags |= SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
+        if (windowDescriptor.Transparent) flags |= SDL_WindowFlags.SDL_WINDOW_TRANSPARENT;
+        if (windowDescriptor.NotFocusable) flags |= SDL_WindowFlags.SDL_WINDOW_NOT_FOCUSABLE;
+        flags |= windowDescriptor.Border switch
         {
             WindowBorder.Borderless => SDL_WindowFlags.SDL_WINDOW_BORDERLESS,
             WindowBorder.Resizable => SDL_WindowFlags.SDL_WINDOW_RESIZABLE,
             _ => 0
         };
-        flags |= descriptor.State switch
+        flags |= windowDescriptor.State switch
         {
             WindowState.Maximized => SDL_WindowFlags.SDL_WINDOW_MAXIMIZED,
             WindowState.Minimized => SDL_WindowFlags.SDL_WINDOW_MINIMIZED,
@@ -75,12 +75,12 @@ public sealed unsafe class SdlPlatform : Platform
             _ => 0
         };
 
-        SDL_Window* win = SDL_CreateWindow(descriptor.Title, descriptor.Size.Width, descriptor.Size.Height, flags);
-        if (descriptor.Position is not null)
+        SDL_Window* win = SDL_CreateWindow(windowDescriptor.Title, windowDescriptor.Size.Width, windowDescriptor.Size.Height, flags);
+        if (windowDescriptor.Position is not null)
         {
-            SDL_SetWindowPosition(win, descriptor.Position.Value.X, descriptor.Position.Value.Y);
+            SDL_SetWindowPosition(win, windowDescriptor.Position.Value.X, windowDescriptor.Position.Value.Y);
         }
 
-        return new SdlWindow(win);
+        return new SdlWindow(win, in windowDescriptor, in deviceDescriptor, driver);
     }
 }

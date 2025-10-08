@@ -1,3 +1,4 @@
+using Hematite.Graphics;
 using Hematite.Windowing;
 
 namespace Hematite;
@@ -51,7 +52,7 @@ public abstract class Platform : IEquatable<Platform>
     public abstract string UniqueName { get; }
     public abstract bool IsUsable { get; }
     
-    public abstract Window MakeWindow(ref readonly WindowDescriptor descriptor);
+    public abstract Window MakeWindow(ref readonly WindowDescriptor windowDescriptor, ref readonly GraphicsDeviceDescriptor deviceDescriptor, Driver driver);
 
     public bool Equals(Platform? other) =>
         other is not null && (ReferenceEquals(this, other) || UniqueName.Equals(other.UniqueName, StringComparison.OrdinalIgnoreCase));

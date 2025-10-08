@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Hematite.Graphics.OpenGl\Hematite.Graphics.OpenGl.csproj" />
   <Project Path="Hematite.Test\Hematite.Test.csproj" />
   <Project Path="Hematite.Windowing.Sdl\Hematite.Windowing.Sdl.csproj" />
   <Project Path="Hematite/Hematite.csproj" />

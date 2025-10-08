@@ -7,23 +7,25 @@ public abstract class Window : IDisposable
 {
     public static Window? Current { get; set; }
 
-    public static Window Make(ref readonly WindowDescriptor descriptor)
+    public static Window Make(ref readonly WindowDescriptor windowDescriptor, ref readonly GraphicsDeviceDescriptor deviceDescriptor)
     {
         if (Platform.Current is null)
         {
             throw new InvalidOperationException("Platform has not been initialized or no platforms were registered");
         }
         
-        ArgumentException.ThrowIfNullOrEmpty(descriptor.Title);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(descriptor.Size.Width);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(descriptor.Size.Height);
+        ArgumentException.ThrowIfNullOrEmpty(windowDescriptor.Title);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(windowDescriptor.Size.Width);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(windowDescriptor.Size.Height);
         
         // TODO use appropriate api for each os (except for mac :tf:)
-        WindowDescriptor newDescriptor = descriptor with
+        WindowDescriptor newDescriptor = windowDescriptor with
         {
             Api = DriverApi.OpenGl
         };
-        return Platform.Current.MakeWindow(in newDescriptor);
+        return Platform.Current.MakeWindow(
+            in newDescriptor, in deviceDescriptor,
+            Driver.GetForApi(newDescriptor.Api) ?? throw new ArgumentException("No driver has been found for the window", nameof(windowDescriptor)));
     }
     
     public abstract nint Handle { get; }
@@ -36,14 +38,29 @@ public abstract class Window : IDisposable
     public abstract SizeI MaxSize { get; set; }
     public abstract Int2 Position { get; set; }
     public abstract float Opacity { get; set; }
+    public GraphicsDevice GraphicsDevice { get; protected init; }
 
     public abstract event Action<Int2>? Resized;
     public abstract event Action<Int2>? Moved; 
     
-    public void MakeCurrent() => Current = this;
+    public void MakeCurrent()
+    {
+        Current = this;
+        GraphicsDevice.MakeCurrent();
+    }
+
     public void Close() => ShouldClose = true;
 
     public abstract void Update();
 
-    public abstract void Dispose();
+    protected virtual void Dispose(bool disposed)
+    {
+    }
+
+    public void Dispose()
+    {
+        GraphicsDevice.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 }

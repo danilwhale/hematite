@@ -1,3 +1,4 @@
+using Hematite.Graphics;
 using SDL;
 using Vortice.Mathematics;
 using static SDL.SDL3;
@@ -130,9 +131,101 @@ public sealed unsafe class SdlWindow : Window
 
     private readonly SDL_Window* _window;
 
-    internal SdlWindow(SDL_Window* window)
+    internal SdlWindow(SDL_Window* window, ref readonly WindowDescriptor windowDescriptor, ref readonly GraphicsDeviceDescriptor deviceDescriptor, Driver driver)
     {
         _window = window;
+        
+        // initialize graphics device
+        IGraphicsContext context;
+        switch (windowDescriptor.Api)
+        {
+            case DriverApi.OpenGl:
+                // TODO maybe encode bitness in format value?
+                switch (deviceDescriptor.PixelFormat)
+                {
+                    case PixelFormat.Bgra8:
+                    case PixelFormat.Rgba8:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 8);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 8);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 8);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 8);
+                        break;
+                    case PixelFormat.Rgba16:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 16);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 16);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 16);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 16);
+                        break;
+                    case PixelFormat.Rgb10A2:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 10);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 10);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 10);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 2);
+                        break;
+                    case PixelFormat.B5G6R5:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 5);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 6);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 5);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 0);
+                        break;
+                    case PixelFormat.B5G5R5A1:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 5);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 5);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 5);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 1);
+                        break;
+                    case PixelFormat.Bgra4:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 4);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 4);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 4);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 4);
+                        break;
+                    case PixelFormat.SRgba8:
+                    case PixelFormat.SBgra8:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
+                        goto case PixelFormat.Rgba8;
+                    case PixelFormat.Rgba32:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_RED_SIZE, 32);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_GREEN_SIZE, 32);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_BLUE_SIZE, 32);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_ALPHA_SIZE, 32);
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+
+                switch (deviceDescriptor.DepthFormat)
+                {
+                    case DepthFormat.D0:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DEPTH_SIZE, 0);
+                        break;
+                    case DepthFormat.D16:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DEPTH_SIZE, 16);
+                        break;
+                    case DepthFormat.D24:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DEPTH_SIZE, 24);
+                        break;
+                    case DepthFormat.D24S8:
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DEPTH_SIZE, 0);
+                        SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_DEPTH_SIZE, 0);
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+
+                SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_MULTISAMPLEBUFFERS, deviceDescriptor.SampleBuffersCount);
+                SDL_GL_SetAttribute(SDL_GLAttr.SDL_GL_MULTISAMPLESAMPLES, deviceDescriptor.SampleCount);
+
+                SDL_GL_SetSwapInterval(deviceDescriptor.VSync ? 1 : 0);
+                
+                SDL_GLContextState* glContext = SDL_GL_CreateContext(window);
+                context = new SdlOpenGLContext(window, glContext);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
+        GraphicsDevice = driver.CreateDevice(this, context);
     }
 
     public override void Update()
@@ -143,6 +236,7 @@ public sealed unsafe class SdlWindow : Window
             switch (ev.Type)
             {
                 case SDL_EventType.SDL_EVENT_WINDOW_RESIZED:
+                    GraphicsDevice.Resize(new RectI(0, 0, ev.window.data1, ev.window.data2));
                     Resized?.Invoke(new Int2(ev.window.data1, ev.window.data2));
                     break;
                 case SDL_EventType.SDL_EVENT_WINDOW_MOVED:
@@ -154,10 +248,13 @@ public sealed unsafe class SdlWindow : Window
                 // TODO: input
             }
         }
+
+        GraphicsDevice.Update();
     }
 
-    public override void Dispose()
+    protected override void Dispose(bool disposed)
     {
+        SDL_DestroyWindow(_window);
         SDL_QuitSubSystem(SDL_InitFlags.SDL_INIT_VIDEO);
     }
 }
