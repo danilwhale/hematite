@@ -19,11 +19,27 @@ public abstract class Window : IDisposable
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(windowDescriptor.Size.Width);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(windowDescriptor.Size.Height);
         
-        // TODO use appropriate api for each os (except for mac :tf:)
-        WindowDescriptor newDescriptor = windowDescriptor with
+        WindowDescriptor newDescriptor;
+        if (windowDescriptor.Api == DriverApi.Automatic)
         {
-            Api = DriverApi.OpenGl
-        };
+            // fallback to opengl
+            DriverApi installedApi = DriverApi.OpenGl;
+            
+            // try to use native api
+            if (OperatingSystem.IsWindows() && Driver.HasForApi(DriverApi.DirectX))
+                installedApi = DriverApi.DirectX;
+            else if (OperatingSystem.IsLinux() && Driver.HasForApi(DriverApi.Vulkan))
+                installedApi = DriverApi.Vulkan;
+            else if (OperatingSystem.IsMacOS() && Driver.HasForApi(DriverApi.Metal))
+                installedApi = DriverApi.Metal;
+
+            newDescriptor = windowDescriptor with
+            {
+                Api = installedApi
+            };
+        }
+        else newDescriptor = windowDescriptor;
+        
         return Platform.Current.MakeWindow(
             in newDescriptor, in deviceDescriptor,
             Driver.GetForApi(newDescriptor.Api) ?? throw new ArgumentException("No driver has been found for the window", nameof(windowDescriptor)));

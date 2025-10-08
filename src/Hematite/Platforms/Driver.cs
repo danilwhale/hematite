@@ -49,6 +49,32 @@ public abstract class Driver : IEquatable<Driver>
         return null;
     }
 
+    public static bool HasForApi(DriverApi api)
+    {
+        if (_currentDriver is not null && (_currentDriver.Api & api) != 0)
+        {
+            return true;
+        }
+        
+        if (!string.IsNullOrWhiteSpace(_targetDriver))
+        {
+            foreach (Driver driver in RegisteredDrivers)
+            {
+                if (!driver.UniqueName.Equals(_targetDriver, StringComparison.OrdinalIgnoreCase)) continue;
+                if ((driver.Api & api) == 0) break; // looks like wanted driver doesn't support required api
+                return true;
+            }
+        }
+
+        foreach (Driver driver in RegisteredDrivers)
+        {
+            if ((driver.Api & api) == 0) continue;
+            return true;
+        }
+
+        return false;
+    }
+
     public static void SetTarget(string uniqueName) => _targetDriver = uniqueName;
 
     public abstract string Name { get; }
