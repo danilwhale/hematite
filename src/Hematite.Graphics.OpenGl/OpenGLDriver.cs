@@ -1,7 +1,8 @@
+using Hematite.Platforms;
 using Hematite.Windowing;
 using Silk.NET.OpenGL;
 
-namespace Hematite.Graphics.OpenGl;
+namespace Hematite.Graphics.OpenGL;
 
 public sealed class OpenGLDriver : Driver
 {

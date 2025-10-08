@@ -1,6 +1,6 @@
-﻿using Hematite;
-using Hematite.Graphics;
-using Hematite.Graphics.OpenGl;
+﻿using Hematite.Graphics;
+using Hematite.Graphics.OpenGL;
+using Hematite.Platforms;
 using Hematite.Windowing;
 using Hematite.Windowing.SDL;
 using Vortice.Mathematics;

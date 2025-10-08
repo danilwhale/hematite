@@ -1,7 +1,7 @@
 using Hematite.Graphics;
 using Hematite.Windowing;
 
-namespace Hematite;
+namespace Hematite.Platforms;
 
 public abstract class Platform : IEquatable<Platform>
 {

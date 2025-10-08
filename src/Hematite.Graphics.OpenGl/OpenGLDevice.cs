@@ -3,7 +3,7 @@ using Silk.NET.Core.Contexts;
 using Silk.NET.OpenGL;
 using Vortice.Mathematics;
 
-namespace Hematite.Graphics.OpenGl;
+namespace Hematite.Graphics.OpenGL;
 
 public sealed class OpenGLDevice : GraphicsDevice
 {

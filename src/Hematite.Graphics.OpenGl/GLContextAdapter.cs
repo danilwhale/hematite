@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Silk.NET.Core.Contexts;
 
-namespace Hematite.Graphics.OpenGl;
+namespace Hematite.Graphics.OpenGL;
 
 internal readonly struct GLContextAdapter(IOpenGLContext value) : IGLContext
 {

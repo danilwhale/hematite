@@ -1,6 +1,7 @@
+using Hematite.Graphics;
 using Hematite.Windowing;
 
-namespace Hematite.Graphics;
+namespace Hematite.Platforms;
 
 public abstract class Driver : IEquatable<Driver>
 {

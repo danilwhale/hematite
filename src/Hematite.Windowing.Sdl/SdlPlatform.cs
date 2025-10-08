@@ -1,4 +1,5 @@
 using Hematite.Graphics;
+using Hematite.Platforms;
 using SDL;
 using static SDL.SDL3;
 
