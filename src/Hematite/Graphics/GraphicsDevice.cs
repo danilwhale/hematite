@@ -7,7 +7,9 @@ public abstract class GraphicsDevice(Window window) : IDisposable
 {
     public Window Window { get; } = window;
 
-    public abstract void Clear(ClearDeviceMask mask, Color4? color = null, float? depth = null);
+    public abstract void Clear(Color4 color);
+    public abstract void Clear(float depth);
+    public abstract void Clear(Color4 color, float depth);
 
     public abstract void Resize(in RectI newSize);
     public abstract void MakeCurrent();

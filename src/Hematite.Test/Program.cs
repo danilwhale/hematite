@@ -29,6 +29,6 @@ GraphicsDevice device = window.GraphicsDevice;
 
 while (!window.ShouldClose)
 {
-    device.Clear(ClearDeviceMask.Color, color: Colors.CornflowerBlue);
+    device.Clear(Colors.CornflowerBlue);
     window.Update();
 }
